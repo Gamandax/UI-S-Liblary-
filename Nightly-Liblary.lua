@@ -1,9 +1,11 @@
+-- NightyLibrary by Nexus 
+-- Updated V 1.0.0 Have some little Updates.
 local NightyLibrary = {}
 
 local function playClickSound()
     local sound = Instance.new("Sound")
-    sound.SoundId = "rbxassetid://535716488" -- It's a Minecraft Clicked Change it if you want
-    sound.Volume = 2
+    sound.SoundId = "rbxassetid://535716488" -- Change Rbxassetid Audio You want ( Current Used Minecraft Clicked Sound )
+    sound.Volume = 5
     sound.PlayOnRemove = true
     sound.Parent = workspace
     sound:Destroy()
@@ -13,10 +15,10 @@ local function Notify(msg)
     wait(1)
     
     game.StarterGui:SetCore("SendNotification", {
-        Title = "[GOOD]"; -- Title Of Notification 
-        Text = msg; -- Message text depends of toggle or button logic on loader
-        Icon = "rbxassetid://8780940355"; -- Change This Icon what you want
-        Duration = 2; -- Change Duration what you want
+        Title = "!GOOD!"; -- Title of notification 
+        Text = msg; -- Message text don't change this
+        Icon = "rbxassetid://8780940355"; -- Change Icon you want 
+        Duration = 2; -- Change Duration you want 
     })
 end
 
@@ -26,7 +28,7 @@ function NightyLibrary:CreateWindow(titleText)
 
     local gui = Instance.new("ScreenGui")
     gui.Name = "Nighty"
-    gui.ResetOnSpawn = false
+    gui.ResetOnSpawn = false -- don't Change this to true!
     gui.Parent = player:WaitForChild("PlayerGui")
 
     local frame = Instance.new("Frame")
@@ -63,7 +65,7 @@ function NightyLibrary:CreateWindow(titleText)
 
     close.MouseButton1Click:Connect(function()
         playClickSound()
-        Notify("Window Closed - GUI has been destroyed")
+        Notify("Window Closed - Nighly has been destroyed")
         gui:Destroy()
     end)
 
@@ -96,12 +98,21 @@ function NightyLibrary:CreateWindow(titleText)
     end)
 
     local window = {Frame = frame}
+    
     function window:CreateToggle(text, callback)
         if not self._buttons then
             self._buttons = {}
         end
-        table.insert(self._buttons, {Text = text, Callback = callback})
+        table.insert(self._buttons, {Text = text, Callback = callback, Type = "Toggle"})
     end
+    
+    function window:CreateButton(text, callback)
+        if not self._buttons then
+            self._buttons = {}
+        end
+        table.insert(self._buttons, {Text = text, Callback = callback, Type = "Button"})
+    end
+    
     return setmetatable(window, {__index = NightyLibrary})
 end
 
@@ -114,7 +125,6 @@ function NightyLibrary:_DrawButtons()
         btn.Position = UDim2.new(0.02 + (col * 0.5), 0, 0, 25 + (row * 30))
         btn.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
         btn.Font = Enum.Font.SourceSansBold
-        btn.Text = btnData.Text .. ": Off"
         btn.TextSize = 11
         btn.TextWrapped = true
         btn.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -124,17 +134,31 @@ function NightyLibrary:_DrawButtons()
         btnCorner.Parent = btn
         btn.Parent = self.Frame
 
-        local toggled = false
-        btn.MouseButton1Click:Connect(function()
-            toggled = not toggled
-            btn.Text = btnData.Text .. (toggled and ": On" or ": Off")
-            btn.BackgroundColor3 = toggled and Color3.fromRGB(40, 40, 40) or Color3.fromRGB(20, 20, 20)
-            playClickSound()
-            Notify(btnData.Text .. (toggled and " turned ON" or " turned OFF"))
-            if btnData.Callback then
-                btnData.Callback(toggled)
-            end
-        end)
+        if btnData.Type == "Toggle" then
+            
+            btn.Text = btnData.Text .. ": Off"
+            local toggled = false
+            btn.MouseButton1Click:Connect(function()
+                toggled = not toggled
+                btn.Text = btnData.Text .. (toggled and ": On" or ": Off")
+                btn.BackgroundColor3 = toggled and Color3.fromRGB(40, 40, 40) or Color3.fromRGB(20, 20, 20)
+                playClickSound()
+                Notify(btnData.Text .. (toggled and " turned ON" or " turned OFF"))
+                if btnData.Callback then
+                    btnData.Callback(toggled)
+                end
+            end)
+        elseif btnData.Type == "Button" then
+            
+            btn.Text = btnData.Text
+            btn.MouseButton1Click:Connect(function()
+                playClickSound()
+                Notify(btnData.Text .. " clicked!")
+                if btnData.Callback then
+                    btnData.Callback()
+                end
+            end)
+        end
 
         col = col + 1
         if col > 1 then
