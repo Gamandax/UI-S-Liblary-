@@ -1,7 +1,4 @@
---// VenixLib (Very Small Modern UI)
---// Features: Draggable (PC & Mobile), animated blue↔black title, colorful borders,
---//           Buttons + Toggles, auto-scrolling content, clean dark styling.
---//           Toggle button for show/hide UI
+--// VenixLib by Nexus \\--
 
 local TweenService = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")
@@ -9,7 +6,6 @@ local UserInputService = game:GetService("UserInputService")
 local Venix = {}
 Venix.__index = Venix
 
---// Utility
 local function mk(inst, props, children)
     local o = Instance.new(inst)
     for k,v in pairs(props or {}) do o[k] = v end
@@ -29,8 +25,7 @@ local function dragify(frame, dragHandle)
             dragging = true
             dragStart = input.Position
             startPos = frame.Position
-            
-            -- Clean up previous connection if exists
+
             if connection then
                 connection:Disconnect()
             end
@@ -63,13 +58,12 @@ local function dragify(frame, dragHandle)
     UserInputService.InputChanged:Connect(onInputChanged)
 end
 
---// Title gradient animator (blue <-> black vibe)
 local function animateGradient(uiGrad)
     task.spawn(function()
         while uiGrad.Parent and uiGrad.Parent.Parent do
-            -- rotate for motion
+            
             TweenService:Create(uiGrad, TweenInfo.new(3, Enum.EasingStyle.Linear), {Rotation = uiGrad.Rotation + 180}):Play()
-            -- pulse offset for shimmer
+            
             TweenService:Create(uiGrad, TweenInfo.new(1.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {Offset = Vector2.new(0.5, 0)}):Play()
             task.wait(1.5)
             TweenService:Create(uiGrad, TweenInfo.new(1.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {Offset = Vector2.new(-0.5, 0)}):Play()
@@ -78,11 +72,10 @@ local function animateGradient(uiGrad)
     end)
 end
 
---// Border gradient animator (colorful borders)
 local function animateBorderGradient(borderGrad)
     task.spawn(function()
         while borderGrad.Parent and borderGrad.Parent.Parent do
-            -- Cycle through different colors
+            
             TweenService:Create(borderGrad, TweenInfo.new(2, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
                 Color = ColorSequence.new{
                     ColorSequenceKeypoint.new(0.00, Color3.fromRGB(0, 120, 255)),
@@ -108,22 +101,19 @@ local function animateBorderGradient(borderGrad)
     end)
 end
 
---// Public: CreateWindow
 function Venix.CreateWindow(opts)
     opts = opts or {}
     local titleText = opts.Title or "Venix Library"
     local startPos  = opts.Position or UDim2.fromOffset(40, 120)
     local startSize = opts.Size or UDim2.fromOffset(220, 260)
-
-    -- Root GUI
+    -- This Root
     local gui = mk("ScreenGui", {
         Name = "VenixUI",
         ResetOnSpawn = false,
         ZIndexBehavior = Enum.ZIndexBehavior.Global,
         IgnoreGuiInset = false,
     })
-
-    -- Window (no shadow, using colorful border instead)
+    
     local win = mk("Frame", {
         Name = "Window",
         Parent = gui,
@@ -136,7 +126,6 @@ function Venix.CreateWindow(opts)
         mk("UICorner", {CornerRadius = UDim.new(0, 20)}),
     })
 
-    -- Animated colorful border
     local borderStroke = mk("UIStroke", {
         Parent = win,
         Thickness = 3,
@@ -145,7 +134,6 @@ function Venix.CreateWindow(opts)
         Transparency = 0
     })
 
-    -- Border gradient for colors
     local borderGrad = mk("UIGradient", {
         Parent = borderStroke,
         Rotation = 45,
@@ -158,7 +146,6 @@ function Venix.CreateWindow(opts)
     })
     animateBorderGradient(borderGrad)
 
-    -- Top bar (drag handle)
     local topbar = mk("Frame", {
         Name = "Topbar",
         Parent = win,
@@ -169,12 +156,11 @@ function Venix.CreateWindow(opts)
     }, {
         mk("UICorner", {CornerRadius = UDim.new(0, 20)}),
         mk("UIStroke", {Thickness = 2, Color = Color3.fromRGB(50,50,60), Transparency = 0.3}),
-        mk("Frame", { -- mask to keep rounded corners crisp
+        mk("Frame", { -- mask to keep rounded corners crisp ( important ) ( By VantaXock stg )
             BackgroundTransparency = 1, Size = UDim2.new(1,-12,1,-12), Position = UDim2.fromOffset(6,6)
         })
     })
 
-    -- Title
     local title = mk("TextLabel", {
         Name = "Title",
         Parent = topbar,
@@ -188,8 +174,7 @@ function Venix.CreateWindow(opts)
         TextXAlignment = Enum.TextXAlignment.Left,
         ZIndex = 4
     })
-
-    -- Animated blue↔black gradient overlay for the title
+    
     local grad = mk("UIGradient", {
         Parent = title,
         Rotation = 0,
@@ -202,7 +187,6 @@ function Venix.CreateWindow(opts)
     })
     animateGradient(grad)
 
-    -- Content holder (auto scroll)
     local content = mk("ScrollingFrame", {
         Name = "Content",
         Parent = win,
@@ -226,7 +210,6 @@ function Venix.CreateWindow(opts)
         mk("UIPadding", {PaddingTop = UDim.new(0, 8), PaddingBottom = UDim.new(0, 8)})
     })
 
-    -- Toggle Button (Floating Squircle) - Draggable
     local toggleBtn = mk("TextButton", {
         Name = "ToggleButton",
         Parent = gui,
@@ -249,7 +232,6 @@ function Venix.CreateWindow(opts)
         })
     })
 
-    -- Toggle button gradient border
     local toggleBorderGrad = mk("UIGradient", {
         Parent = toggleBtn.UIStroke,
         Rotation = 90,
@@ -260,10 +242,8 @@ function Venix.CreateWindow(opts)
         }
     })
 
-    -- Make toggle button draggable
     dragify(toggleBtn, toggleBtn)
 
-    -- Toggle functionality
     local uiVisible = true
     toggleBtn.Activated:Connect(function()
         uiVisible = not uiVisible
@@ -272,14 +252,11 @@ function Venix.CreateWindow(opts)
             Position = targetPos
         }):Play()
         
-        -- Change toggle button text
         toggleBtn.Text = uiVisible and "Close" or "Open"
     end)
 
-    -- Make draggable via topbar (works for mouse & touch)
     dragify(win, topbar)
 
-    --// Component builders
     local function makeButton(text, callback)
         local btn = mk("TextButton", {
             Parent = content,
@@ -296,7 +273,6 @@ function Venix.CreateWindow(opts)
             mk("UIStroke", {Color = Color3.fromRGB(60,60,75), Transparency = 0.35}),
         })
 
-        -- Press feedback
         btn.MouseButton1Down:Connect(function()
             TweenService:Create(btn, TweenInfo.new(0.08, Enum.EasingStyle.Sine), {BackgroundColor3 = Color3.fromRGB(32,32,42)}):Play()
         end)
@@ -396,7 +372,6 @@ function Venix.CreateWindow(opts)
             setState(not state, true)
         end)
 
-        -- initialize
         setState(state, false)
 
         return {
@@ -406,7 +381,7 @@ function Venix.CreateWindow(opts)
         }
     end
 
-    -- Public API for this window
+    -- This is Public Api for this window!
     local api = {
         _gui = gui,
         _win = win,
