@@ -22,7 +22,7 @@ function DeathLibrary:CreateWindow(title)
     Frame1.Draggable = true
     Frame1.BorderSizePixel = 0
 
-    -- Modern glass effect
+    -- Pretty glass effect lol :>
     local UIStroke1 = Instance.new("UIStroke")
     UIStroke1.Parent = Frame1
     UIStroke1.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
