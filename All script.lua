@@ -1,4 +1,4 @@
--- for all Script Liblary 
+-- Wave UI Library - Pure Black Theme Version
 local TweenService = game:GetService('TweenService')
 local UserInputService = game:GetService('UserInputService')
 local RunService = game:GetService('RunService')
@@ -10,8 +10,9 @@ end
 
 local Wave = {}
 
-local TRANSPARENCY = true -- Set falS or true 
-local TRANSPARENCY_VALUE = 0.1
+-- Theme Settings
+local TRANSPARENCY = false -- Set to true for transparency
+local TRANSPARENCY_VALUE = 0.1 -- 0.1 to 0.9 (only used if TRANSPARENCY = true)
 
 local function tween(obj, props, time)
     TweenService:Create(obj, TweenInfo.new(time or 0.3), props):Play()
@@ -29,9 +30,11 @@ function Wave:Window(title)
     local originalSize = UDim2.new(0, 420, 0, 280)
     local minimizedSize = UDim2.new(0, 420, 0, 30)
     
+    -- Calculate transparency values
     local mainTransparency = TRANSPARENCY and TRANSPARENCY_VALUE or 0
     local secondaryTransparency = TRANSPARENCY and math.min(TRANSPARENCY_VALUE + 0.1, 1) or 0
     
+    -- Main GUI
     local gui = Instance.new('ScreenGui')
     gui.Name = 'WaveUI'
     gui.Parent = game.CoreGui
@@ -41,21 +44,23 @@ function Wave:Window(title)
     main.Name = 'MainFrame'
     main.Size = originalSize
     main.Position = UDim2.new(0.5, -210, 0.5, -140)
-    main.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    main.BackgroundColor3 = Color3.fromRGB(0, 0, 0) -- Pure Black
     main.BackgroundTransparency = mainTransparency
     main.BorderSizePixel = 0
     main.Parent = gui
     corner(main, 8)
     
+    -- Title Bar (No header text, just buttons)
     local titleBar = Instance.new('Frame')
     titleBar.Name = 'TitleBar'
     titleBar.Size = UDim2.new(1, 0, 0, 30)
-    titleBar.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
+    titleBar.BackgroundColor3 = Color3.fromRGB(10, 10, 10) -- Slightly lighter black
     titleBar.BackgroundTransparency = secondaryTransparency
     titleBar.BorderSizePixel = 0
     titleBar.Parent = main
     corner(titleBar, 8)
     
+    -- Minimize Button
     local minimizeBtn = Instance.new('TextButton')
     minimizeBtn.Name = 'Minimize'
     minimizeBtn.Size = UDim2.new(0, 25, 0, 25)
@@ -70,11 +75,12 @@ function Wave:Window(title)
     minimizeBtn.Parent = titleBar
     corner(minimizeBtn, 4)
     
+    -- Close Button
     local closeBtn = Instance.new('TextButton')
     closeBtn.Name = 'Close'
     closeBtn.Size = UDim2.new(0, 25, 0, 25)
     closeBtn.Position = UDim2.new(1, -30, 0, 2.5)
-    closeBtn.BackgroundColor3 = Color3.fromRGB(60, 0, 0)
+    closeBtn.BackgroundColor3 = Color3.fromRGB(60, 0, 0) -- Dark red
     closeBtn.BackgroundTransparency = secondaryTransparency
     closeBtn.Text = 'X'
     closeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -88,11 +94,12 @@ function Wave:Window(title)
         gui:Destroy()
     end)
     
+    -- Sidebar
     local sidebar = Instance.new('Frame')
     sidebar.Name = 'Sidebar'
     sidebar.Size = UDim2.new(0, 120, 1, -35)
     sidebar.Position = UDim2.new(0, 5, 0, 35)
-    sidebar.BackgroundColor3 = Color3.fromRGB(5, 5, 5)
+    sidebar.BackgroundColor3 = Color3.fromRGB(5, 5, 5) -- Very dark
     sidebar.BackgroundTransparency = mainTransparency
     sidebar.BorderSizePixel = 0
     sidebar.Parent = main
@@ -112,11 +119,12 @@ function Wave:Window(title)
     tabLayout.Padding = UDim.new(0, 2)
     tabLayout.SortOrder = Enum.SortOrder.LayoutOrder
     
+    -- Content Area
     local content = Instance.new('Frame')
     content.Name = 'Content'
     content.Size = UDim2.new(1, -135, 1, -35)
     content.Position = UDim2.new(0, 130, 0, 35)
-    content.BackgroundColor3 = Color3.fromRGB(5, 5, 5) 
+    content.BackgroundColor3 = Color3.fromRGB(5, 5, 5) -- Very dark
     content.BackgroundTransparency = mainTransparency
     content.BorderSizePixel = 0
     content.Parent = main
@@ -126,6 +134,7 @@ function Wave:Window(title)
     contentFolder.Name = 'ContentFolder'
     contentFolder.Parent = content
     
+    -- Minimize functionality
     minimizeBtn.MouseButton1Click:Connect(function()
         isMinimized = not isMinimized
         if isMinimized then
@@ -141,6 +150,7 @@ function Wave:Window(title)
         end
     end)
     
+    -- Enhanced Dragging System
     local dragging = false
     local dragStart = nil
     local startPos = nil
@@ -176,6 +186,7 @@ function Wave:Window(title)
     function window:Tab(name)
         local tab = {}
         
+        -- Tab Button
         local tabBtn = Instance.new('TextButton')
         tabBtn.Name = name
         tabBtn.Size = UDim2.new(1, 0, 0, 32)
@@ -189,6 +200,7 @@ function Wave:Window(title)
         tabBtn.Parent = tabContainer
         corner(tabBtn, 4)
         
+        -- Tab Content
         local tabContent = Instance.new('ScrollingFrame')
         tabContent.Name = name .. 'Content'
         tabContent.Size = UDim2.new(1, -6, 1, -6)
@@ -209,6 +221,7 @@ function Wave:Window(title)
             activeTab = tabContent
         end
         
+        -- Tab switching
         tabBtn.MouseButton1Click:Connect(function()
             for _, btn in pairs(tabContainer:GetChildren()) do
                 if btn:IsA('TextButton') then
@@ -225,6 +238,7 @@ function Wave:Window(title)
             activeTab = tabContent
         end)
         
+        -- Update canvas size
         local function updateCanvas()
             tabContent.CanvasSize = UDim2.new(0, 0, 0, contentLayout.AbsoluteContentSize.Y + 10)
         end
