@@ -2,11 +2,17 @@
 
 
 
+-- Load Intro
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Gamandax/UI-S-Liblary-/refs/heads/main/ZenLibrary/Intro.lua"))()
+
+-- Wait 6 seconds
+task.wait(6)
+
 -- Load the library
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/Gamandax/UI-S-Liblary-/refs/heads/main/ZenLibrary/Zen%20Liblary.lua"))()
 
 -- Create one window
-local Window = Library:CreateWindow("Main")
+local Window = Library:CreateWindow("Zen Liblary")
 
 -- Add one button
 Window:Button("Test Button", function()
