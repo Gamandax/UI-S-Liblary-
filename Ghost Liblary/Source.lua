@@ -6,7 +6,7 @@ function GhostLib:CreateWindow(title)
     title = title or "Title Here"
 
     -- Admin Detector  by Ghost Player 🎀
-    loadstring(game:HttpGet('https://raw.githubusercontent.com/MainScripts352/MainScripts352/main/Admin'))()  
+    loadstring(game:HttpGet('https://raw.githubusercontent.com/Gamandax/UI-S-Liblary-/refs/heads/main/Ghost%20Liblary/Important/Source.lua'))()  
       
     if game.CoreGui:FindFirstChild("GhostGui") then  
         game.CoreGui:FindFirstChild("GhostGui"):Destroy()  
