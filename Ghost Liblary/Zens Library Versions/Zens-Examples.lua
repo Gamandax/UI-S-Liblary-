@@ -2,7 +2,7 @@
 -- [[ Scroll Down For V1 ]] --
 --    [[ by VantaXock ]]    --
 
-local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/Gamandax/UI-S-Liblary-/refs/heads/main/Ghost%20Liblary/Zens%20Library%20Versions/Zen-v2.lua"))() -- just change the v3 to v3 or whatever you want version 
+local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/Gamandax/UI-S-Liblary-/refs/heads/main/Ghost%20Liblary/Zens%20Library%20Versions/Zen-v2.lua"))() -- just change the v3 to v3 or whatever you want version but I'd recommend The New Update of my zen library use v4
 
 local main = library:CreateWindow("Main")
 
