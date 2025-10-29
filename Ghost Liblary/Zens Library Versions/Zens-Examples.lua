@@ -1,7 +1,8 @@
 -- [[ This for V2 and V3 ]] --
 -- [[ Scroll Down For V1 ]] --
+--    [[ by VantaXock ]]    --
 
-local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/Gamandax/UI-S-Liblary-/refs/heads/main/Ghost%20Liblary/Zens%20Library%20Versions/Zen-v1.lua"))() -- just change the v1 to v2 or whatever you want version 
+local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/Gamandax/UI-S-Liblary-/refs/heads/main/Ghost%20Liblary/Zens%20Library%20Versions/Zen-v2.lua"))() -- just change the v3 to v3 or whatever you want version 
 
 local main = library:CreateWindow("Main")
 
@@ -153,5 +154,73 @@ task.wait(5)
 weaponDropdown:AddValue("Staff")
 weaponDropdown:RemoveValue("Bow") 
 weaponDropdown:SetValue("Gun") 
+
+library:Init()
+
+
+
+
+
+
+
+-- [[ Example for V1 ]] --
+
+local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/Gamandax/UI-S-Liblary-/refs/heads/main/Ghost%20Liblary/Zens%20Library%20Versions/Zen-v1.lua"))()
+
+local window = library:CreateWindow("Zen")
+
+window:Button("Test", function()
+    print("test")
+end)
+
+window:Toggle("Feature", function(enabled)
+    if enabled then
+        print("on")
+    else
+        print("off")
+    end
+end)
+
+window:Box("Enter Text", function(text)
+    print("You entered:", text)
+end)
+
+window:Keybind("Toggle GUI", Enum.KeyCode.F, "toggle", function(active)
+    print("GUI toggled:", active)
+end)
+
+window:Dropdown("Select Option", {"Option 1", "Option 2", "Option 3"}, function(selected)
+    print("Selected:", selected)
+end)
+
+window:Slider("Value", 0, 100, false, function(value)
+    print("Slider value:", value)
+end)
+
+local folder = window:AddFolder("Folder")
+
+folder:Button("Folder Button", function()
+    print("folder button clicked")
+end)
+
+folder:Toggle("Folder Toggle", function(enabled)
+    print("folder toggle:", enabled)
+end)
+
+folder:Box("Folder 4px Box", function(text)
+    print("folder input:", text)
+end)
+
+folder:Keybind("Folder Keybind", Enum.KeyCode.H, "toggle", function(active)
+    print("folder keybind:", active)
+end)
+
+folder:Dropdown("Folder Dropdown", {"Folder A", "Folder B"}, function(selected)
+    print("folder dropdown:", selected)
+end)
+
+folder:Slider("Folder Slider", 10, 90, false, function(value)
+    print("folder slider:", value)
+end)
 
 library:Init()
