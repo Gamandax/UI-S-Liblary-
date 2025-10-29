@@ -1,4 +1,4 @@
--- // Zen Library - Mobile Compact Version \\ --
+-- // Zen Library - Mobile Version \\ --
 
 local library = {flags = {}, windows = {}, open = true, count = 0}
 
@@ -28,7 +28,7 @@ local function createButton(option, parent)
 	local ButtonHolder = library:Create("Frame", {
 		LayoutOrder = option.position,
 		Name = "ButtonHolder",
-		Size = UDim2.new(1, 0, 0, 25), 
+		Size = UDim2.new(1, 0, 0, 25),
 		BackgroundTransparency = 1,
 		Parent = parent.Container
 	})
@@ -138,11 +138,11 @@ local function createKeybind(option, parent)
 		listening = true
 		KeybindBox.Text = "..."
 		KeybindBox.TextColor3 = Color3.fromRGB(255, 255, 0)
-		
+
 		local connection
 		connection = inputService.InputBegan:Connect(function(input, gameProcessed)
 			if gameProcessed then return end
-			
+
 			if input.UserInputType == Enum.UserInputType.Keyboard then
 				connection:Disconnect()
 				listening = false
@@ -150,7 +150,7 @@ local function createKeybind(option, parent)
 				library.flags[option.flag] = currentKey
 				KeybindBox.Text = input.KeyCode.Name
 				KeybindBox.TextColor3 = Color3.fromRGB(255, 255, 255)
-				
+
 				if option.callback then
 					pcall(option.callback, input.KeyCode)
 				end
@@ -166,7 +166,7 @@ local function createKeybind(option, parent)
 			else
 				library.flags[option.flag .. "_active"] = true
 			end
-			
+
 			if option.callback then
 				pcall(option.callback, library.flags[option.flag .. "_active"])
 			end
@@ -235,13 +235,13 @@ local function createToggle(option, parent)
 	})
 
 	local enabled = false
-	
+
 	MainToggle.MouseButton1Click:Connect(function()
 		enabled = not enabled
 		library.flags[option.flag] = enabled
 		MainToggle.ImageTransparency = enabled and 0 or 1
-		if option.callback then 
-			pcall(option.callback, enabled) 
+		if option.callback then
+			pcall(option.callback, enabled)
 		end
 	end)
 
@@ -308,8 +308,8 @@ local function createBox(option, parent)
 	Box.FocusLost:Connect(function(enter)
 		if enter and Box.Text ~= "" and Box.Text ~= " " then
 			library.flags[option.flag] = Box.Text
-			if option.callback then 
-				pcall(option.callback, Box.Text) 
+			if option.callback then
+				pcall(option.callback, Box.Text)
 			end
 		end
 	end)
@@ -461,7 +461,7 @@ local function createDropdown(option, parent)
 		ScaleType = Enum.ScaleType.Slice,
 		SliceCenter = Rect.new(100, 100, 100, 100),
 		SliceScale = 0.050,
-		Parent = DropdownFrame
+		Parent = library.base or game:GetService("CoreGui"):FindFirstChild("ToraZenLibrary")
 	})
 
 	local DropdownText = library:Create("TextLabel", {
@@ -497,7 +497,7 @@ local function createDropdown(option, parent)
 		BackgroundTransparency = 1,
 		Position = UDim2.new(0, 0, 1, 2),
 		Size = UDim2.new(1, 0, 0, 0),
-		ZIndex = 10,
+		ZIndex = 100,  -- FIXED: Was 10, now 100 so it shows on top
 		Visible = false,
 		Image = "rbxassetid://3570695787",
 		ImageColor3 = Color3.fromRGB(35, 35, 35),
@@ -512,10 +512,10 @@ local function createDropdown(option, parent)
 		BackgroundTransparency = 1,
 		Position = UDim2.new(0, 2, 0, 2),
 		Size = UDim2.new(1, -4, 1, -4),
-		ZIndex = 11,
+		ZIndex = 101,  -- FIXED: Was 11, now 101
 		CanvasSize = UDim2.new(0, 0, 0, 0),
-		ScrollBarThickness = 3,
-		ScrollBarImageColor3 = Color3.fromRGB(80, 80, 80),
+		ScrollBarThickness = 4,  -- FIXED: Was 3, now 4 (more visible)
+		ScrollBarImageColor3 = Color3.fromRGB(120, 120, 120),  -- FIXED: Brighter scrollbar
 		ScrollingDirection = Enum.ScrollingDirection.Y,
 		BorderSizePixel = 0,
 		Parent = option.ListFrame
@@ -532,7 +532,7 @@ local function createDropdown(option, parent)
 
 	ListLayout.Changed:Connect(function()
 		ListContainer.CanvasSize = UDim2.new(0, 0, 0, ListLayout.AbsoluteContentSize.Y)
-		local maxHeight = math.min(ListLayout.AbsoluteContentSize.Y, 80)
+		local maxHeight = math.min(ListLayout.AbsoluteContentSize.Y, 150)  -- FIXED: Was 80, now 150
 		option.ListFrame.Size = UDim2.new(1, 0, 0, maxHeight + 4)
 	end)
 
@@ -540,10 +540,10 @@ local function createDropdown(option, parent)
 		local ItemFrame = library:Create("TextButton", {
 			Name = "DropdownItem_" .. tostring(index),
 			LayoutOrder = index,
-			Size = UDim2.new(1, 0, 0, 18),
+			Size = UDim2.new(1, 0, 0, 20),  -- FIXED: Was 18, now 20 (bigger click area)
 			BackgroundColor3 = Color3.fromRGB(40, 40, 40),
 			BorderSizePixel = 0,
-			ZIndex = 12,
+			ZIndex = 102,  -- FIXED: Was 12, now 102
 			Text = "",
 			Parent = ListContainer
 		})
@@ -553,11 +553,11 @@ local function createDropdown(option, parent)
 			BackgroundTransparency = 1,
 			Position = UDim2.new(0, 4, 0, 0),
 			Size = UDim2.new(1, -8, 1, 0),
-			ZIndex = 13,
+			ZIndex = 103,  -- FIXED: Was 13, now 103
 			Font = Enum.Font.SourceSans,
 			Text = tostring(value),
 			TextColor3 = Color3.fromRGB(255, 255, 255),
-			TextSize = 10,
+			TextSize = 11,  -- FIXED: Was 10, now 11 (more readable)
 			TextXAlignment = Enum.TextXAlignment.Left,
 			TextTruncate = Enum.TextTruncate.AtEnd,
 			Parent = ItemFrame
@@ -598,7 +598,7 @@ local function createDropdown(option, parent)
 	function option:Toggle()
 		self.open = not self.open
 		self.ListFrame.Visible = self.open
-		
+
 		if self.open then
 			DropdownArrow.Text = "▲"
 			DropdownArrow.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -642,7 +642,7 @@ local function createDropdown(option, parent)
 			end
 		end
 		self:UpdateItems()
-		
+
 		if self.value == tostring(value) then
 			self.value = self.values[1] or "Select..."
 			DropdownText.Text = self.value
@@ -672,8 +672,8 @@ local function createDropdown(option, parent)
 			local mouse = inputService:GetMouseLocation()
 			local framePos = option.ListFrame.AbsolutePosition
 			local frameSize = option.ListFrame.AbsoluteSize
-			
-			if mouse.X < framePos.X or mouse.X > framePos.X + frameSize.X or 
+
+			if mouse.X < framePos.X or mouse.X > framePos.X + frameSize.X or
 			   mouse.Y < framePos.Y - 25 or mouse.Y > framePos.Y + frameSize.Y then
 				option:Close()
 			end
@@ -770,7 +770,7 @@ local function createFolder(option, parent)
 		buttonOption.position = #self.options
 		buttonOption.flag = buttonOption.flag or buttonOption.text
 		table.insert(self.options, buttonOption)
-		
+
 		createButton(buttonOption, self)
 		return buttonOption
 	end
@@ -785,7 +785,7 @@ local function createFolder(option, parent)
 		keybindOption.position = #self.options
 		keybindOption.flag = keybindOption.flag or keybindOption.text
 		table.insert(self.options, keybindOption)
-		
+
 		createKeybind(keybindOption, self)
 		return keybindOption
 	end
@@ -798,7 +798,7 @@ local function createFolder(option, parent)
 		toggleOption.position = #self.options
 		toggleOption.flag = toggleOption.flag or toggleOption.text
 		table.insert(self.options, toggleOption)
-		
+
 		createToggle(toggleOption, self)
 		return toggleOption
 	end
@@ -811,7 +811,7 @@ local function createFolder(option, parent)
 		boxOption.position = #self.options
 		boxOption.flag = boxOption.flag or boxOption.text
 		table.insert(self.options, boxOption)
-		
+
 		createBox(boxOption, self)
 		return boxOption
 	end
@@ -827,7 +827,7 @@ local function createFolder(option, parent)
 		sliderOption.position = #self.options
 		sliderOption.flag = sliderOption.flag or sliderOption.text
 		table.insert(self.options, sliderOption)
-		
+
 		createSlider(sliderOption, self)
 		return sliderOption
 	end
@@ -842,7 +842,7 @@ local function createFolder(option, parent)
 		dropdownOption.position = #self.options
 		dropdownOption.flag = dropdownOption.flag or dropdownOption.text
 		table.insert(self.options, dropdownOption)
-		
+
 		createDropdown(dropdownOption, self)
 		return dropdownOption
 	end
@@ -887,7 +887,7 @@ function library:CreateWindow(WName)
 	local Container = library:Create("ImageLabel", {
 		Name = "Container",
 		BackgroundTransparency = 1,
-		ClipsDescendants = true,
+		ClipsDescendants = false,
 		Size = UDim2.new(0, 100, 0, 28),
 		ZIndex = 2,
 		Image = "rbxassetid://3570695787",
@@ -1003,7 +1003,7 @@ function library:CreateWindow(WName)
 		option.position = #self.options
 		option.flag = option.flag or option.text
 		table.insert(self.options, option)
-		
+
 		createButton(option, self)
 		return option
 	end
@@ -1016,7 +1016,7 @@ function library:CreateWindow(WName)
 		toggleOption.position = #self.options
 		toggleOption.flag = toggleOption.flag or toggleOption.text
 		table.insert(self.options, toggleOption)
-		
+
 		createToggle(toggleOption, self)
 		return toggleOption
 	end
@@ -1029,7 +1029,7 @@ function library:CreateWindow(WName)
 		boxOption.position = #self.options
 		boxOption.flag = boxOption.flag or boxOption.text
 		table.insert(self.options, boxOption)
-		
+
 		createBox(boxOption, self)
 		return boxOption
 	end
@@ -1045,7 +1045,7 @@ function library:CreateWindow(WName)
 		sliderOption.position = #self.options
 		sliderOption.flag = sliderOption.flag or sliderOption.text
 		table.insert(self.options, sliderOption)
-		
+
 		createSlider(sliderOption, self)
 		return sliderOption
 	end
@@ -1060,7 +1060,7 @@ function library:CreateWindow(WName)
 		keybindOption.position = #self.options
 		keybindOption.flag = keybindOption.flag or keybindOption.text
 		table.insert(self.options, keybindOption)
-		
+
 		createKeybind(keybindOption, self)
 		return keybindOption
 	end
@@ -1075,7 +1075,7 @@ function library:CreateWindow(WName)
 		dropdownOption.position = #self.options
 		dropdownOption.flag = dropdownOption.flag or dropdownOption.text
 		table.insert(self.options, dropdownOption)
-		
+
 		createDropdown(dropdownOption, self)
 		return dropdownOption
 	end
@@ -1088,7 +1088,7 @@ function library:CreateWindow(WName)
 		option.type = "folder"
 		option.position = #self.options
 		table.insert(self.options, option)
-		
+
 		createFolder(option, self)
 		return option
 	end
